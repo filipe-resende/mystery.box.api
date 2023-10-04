@@ -1,0 +1,1 @@
+install dotnet tool on global machine : dotnet tool install --global dotnet-ef
