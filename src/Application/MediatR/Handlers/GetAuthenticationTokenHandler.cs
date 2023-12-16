@@ -1,44 +1,37 @@
-﻿using Application.Configurations;
+﻿using Application.Cross.DependencyInjections;
 using Application.MediatR.Commands;
+using Domain.DTO;
 using Domain.Interfaces.Repositories;
+using Infraestructure.Services;
 using MediatR;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Application.MediatR.Handlers
 {
-    public class GetAuthenticationTokenHandler : IRequestHandler<GetAuthenticationTokenCommand, string>
+    public class GetAuthenticationTokenHandler : IRequestHandler<GetAuthenticationTokenCommand, UserTokenDTO>
     {
         private readonly IUserRepository _repository;
+        private readonly IAuthenticationService _authenticationService;
 
-        public GetAuthenticationTokenHandler(IUserRepository repository)
+        public GetAuthenticationTokenHandler(IUserRepository repository, IAuthenticationService authenticationService)
         {
             _repository = repository;
+            _authenticationService = authenticationService;
         }
 
-        public async Task<string> Handle(GetAuthenticationTokenCommand request, CancellationToken cancellationToken)
+        public async Task<UserTokenDTO> Handle(GetAuthenticationTokenCommand request, CancellationToken cancellationToken)
         {
             var user = await _repository.GetUserByLogin(request.Email, request.Password);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            if (user == null)
+                throw new UserNotFoundException($"user_not_found");
 
-            var tokenDescriptor = new SecurityTokenDescriptor()
+            var token = _authenticationService.CreateAuthenticationToken(user);
+
+            return new UserTokenDTO
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Name.ToString()),
-                }),
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha512Signature)
+                User = user,
+                Token = token
             };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Application.AutoMapper
         {
             CreateMap<SteamCard, SteamCardDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<SteamCardCategory, SteamCardCategoryDTO>().ReverseMap();
+
         }
     }
 }

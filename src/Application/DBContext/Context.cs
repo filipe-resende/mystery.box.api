@@ -12,10 +12,14 @@ public class Context : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserMap());
-        modelBuilder.ApplyConfiguration(new PostMap());
+        modelBuilder.ApplyConfiguration(new SteamCardMap());
+        modelBuilder.ApplyConfiguration(new SteamCardCategoryMap());
+
     }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<SteamCard> Posts { get; set; }
+    //public DbSet<User> Users { get; set; }
+    //public DbSet<SteamCard> SteamCards { get; set; }
+    //public DbSet<SteamCardCategory> SteamCardCategorys { get; set; }
+
 }
 

@@ -18,8 +18,18 @@ namespace Application.MediatR.Handlers
         {
             try
             {
-                var post = new SteamCardDTO { Title = request.Title };
-                var result = await _repository.Add(post);
+                var steamCard = new SteamCardDTO
+                {
+                    Name = request.Name,
+                    Key = request.Key,
+                    Description = request.Description,
+                    SteamCardCategory = new SteamCardCategoryDTO 
+                    {
+                        Id = request.SteamCardCategoryId
+                    } ,
+                };
+
+                var result = await _repository.Add(steamCard);
                 return result.Id;
             }
             catch (Exception ex)

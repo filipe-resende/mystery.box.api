@@ -12,12 +12,6 @@ namespace Application.Controllers
 
         public SteamCardController(IMediator mediator) => _mediator = mediator;
 
-        //[HttpGet]
-        //public async Task<IActionResult> Get()
-        //{
-        //    return Ok(await _repository.GetAll());
-        //}
-
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -26,8 +20,23 @@ namespace Application.Controllers
             return Ok(response);
         }
 
+        [HttpGet("category")]
+        public async Task<IActionResult> GetAll()
+        {
+            var command = new GetAllSteamCardCommand();
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post(RegisterSteamCardCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("category")]
+        public async Task<IActionResult> PostCategory(RegisterSteamCardCategoryCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(response);

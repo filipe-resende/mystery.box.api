@@ -29,6 +29,7 @@ namespace Application.Repository
         {
             var entity = await dbContext.Set<TEntity>().FindAsync(id);
             var mappedEntity = mapper.Map<TEntityDTO>(entity);
+            dbContext.Set<TEntity>().Entry(entity).State = EntityState.Detached;
             return mappedEntity;
         }
 
@@ -45,11 +46,11 @@ namespace Application.Repository
             return mappedEntities;
         }
 
-        public void Update(TEntityDTO entity)
+        public async Task Update(TEntityDTO entity)
         {
             var mappedEntity = mapper.Map<TEntity>(entity);
-            dbContext.Entry(mappedEntity).State = EntityState.Modified;
-            dbContext.SaveChanges();
+            dbContext.Set<TEntity>().Update(mappedEntity);
+            await dbContext.SaveChangesAsync();
         }
         public void Remove(int id)
         {

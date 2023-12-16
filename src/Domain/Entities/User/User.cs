@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
-    [Table("user")]
+    [Table("User")]
     public class User
     {
         [Key]
@@ -15,8 +15,11 @@ namespace Domain.Entities
         public string Password { get; set; }
         [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "CPF is required")]
+        public string CPF { get; set; }
+        public string Phone { get; set; }
         public virtual ICollection<SteamCard> SteamCards { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool Active { get; set; }
     }

@@ -6,7 +6,7 @@
         Task<TEntity> Add(TEntityDTO entity);
         Task<TEntityDTO> GetById(Guid id);
         IEnumerable<TEntityDTO> GetAll();
-        void Update(TEntityDTO entity);
+        Task Update(TEntityDTO entity);
         void Remove(int id);
     }
 }

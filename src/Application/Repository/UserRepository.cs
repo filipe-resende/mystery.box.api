@@ -23,5 +23,14 @@ namespace Application.Repository
             var mappedEntity = _mapper.Map<UserDTO>(entity);
             return mappedEntity;
         }
+
+        public async Task<UserDTO> GetUsersByEmail(string email)
+        {
+            var entity = await dbContext.Set<User>()
+              .FirstOrDefaultAsync(e => e.Email == email);
+
+            var mappedEntity = _mapper.Map<UserDTO>(entity);
+            return mappedEntity;
+        }
     }
 }
