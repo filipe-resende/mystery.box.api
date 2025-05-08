@@ -1,9 +1,6 @@
-﻿using Domain.DTO;
+﻿namespace Domain.Interfaces.Service;
 
-namespace Domain.Interfaces.Repositories
+public interface IGetUserFromToken
 {
-    public interface IGetUserFromToken
-    {
-        Task<UserDTO> GetUserIdFromToken();
-    }
+    Task<UserDTO> GetUserIdFromToken();
 }

@@ -1,8 +1,7 @@
-﻿namespace Domain.DTO
+﻿namespace Domain.DTO;
+
+public class UserTokenDTO
 {
-    public class UserTokenDTO
-    {
-        public UserDTO User { get; set; }
-        public string Token { get; set; }
-    }
+    public UserDTO User { get; set; }
+    public string Token { get; set; }
 }
