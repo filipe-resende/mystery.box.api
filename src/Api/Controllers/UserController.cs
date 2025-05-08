@@ -2,176 +2,73 @@
 
 [ApiController]
 [Route("[controller]")]
-public class UserController(IMediator mediator) : ControllerBase
+public class UserController(IMediator mediator, ILogger<UserController> logger) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
+    private readonly ILogger<UserController> _logger = logger;
+
 
     [HttpPost]
     [AllowAnonymous]
     [Route("signIn")]
-    public async Task<IActionResult> Post([FromBody] GetAuthenticationTokenCommand command)
-    {
-        try
-        {
-            var response = await _mediator.Send(command);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            if (ex.Message.Contains("user_not_found"))
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = "User Already Exist",
-                });
-            }
-
-            return Problem(detail: ex.Message);
-        }
-    }
+    public async Task<Result> Post([FromBody] GetAuthenticationTokenCommand command) => await _mediator.Send(command);
 
     [HttpPost]
     [Route("validate")]
     [Authorize(Roles = "registered")]
-    public async Task<IActionResult> ValidateUser()
+    public async Task<Result> Validate()
     {
-        try
+        var user = User.FindFirst(ClaimTypes.Sid)?.Value;
+
+        if (user == null)
         {
-            var userId = User.FindFirst(ClaimTypes.Sid)?.Value;
-
-            if (userId == null)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = "User Not Found",
-                });
-            }
-
-            var command = new GetValidateTokenCommand(userId);
-            var response = await _mediator.Send(command);
-            return Ok(response);
+            _logger.LogWarning("Usuário não encontrado para o TraceId: {TraceIdentifier}", HttpContext.TraceIdentifier);
+            return Result.Failure(new Error("TOKEN001", "Usuário não encontrado."));
         }
-        catch (Exception ex)
-        {
-            if (ex.Message.Contains("user_not_found"))
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = "User Already Exist",
-                });
-            }
 
-            return Problem(detail: ex.Message);
-        }
+        var command = new GetValidateTokenCommand(user);
+
+        return await _mediator.Send(command);
     }
 
     [HttpPost]
     [Route("forgotten")]
-    public async Task<IActionResult> SendEmailResetUserPassword([FromBody] GetForgottenUserCommand command)
-    {
-        try
-        {
-            var response = await _mediator.Send(command);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            if (ex.Message.Contains("user_not_found"))
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = "User Already Exist",
-                });
-            }
+    public async Task<Result> ResetPassword([FromBody] GetForgottenUserCommand command) => await _mediator.Send(command);
 
-            return Problem(detail: ex.Message);
-        }
-    }
 
     [HttpGet]
     [Route("active/{token}")]
-    public async Task<IActionResult> ActiverUser(string token)
+    public async Task<Result> ActiverUser(string token)
     {
-        try
-        {
-            var command = new ActiverUserCommand();
-            var response = await _mediator.Send(command);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            if (ex.Message.Contains("user_not_found"))
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = "User Already Exist",
-                });
-            }
-
-            return Problem(detail: ex.Message);
-        }
+        var command = new ActiverUserCommand();
+        return await _mediator.Send(command);
     }
 
     [HttpPatch]
     [Route("reset")]
     [Authorize(Roles = "registered")]
-    public async Task<IActionResult> ResetPassword([FromBody] PasswordCommand password)
+    public async Task<Result> ResetPassword([FromBody] PasswordRequest request)
     {
-        try
-        {
-            var userId = User.FindFirst(ClaimTypes.Sid)?.Value;
-            var command = new ResetPasswordCommand(password.Password, userId);
-            var response = await _mediator.Send(command);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            if (ex.Message.Contains("user_not_found"))
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = "User Already Exist",
-                });
-            }
 
-            return Problem(detail: ex.Message);
+        var user = User.FindFirst(ClaimTypes.Sid)?.Value;
+
+        if (user == null)
+        {
+            _logger.LogWarning("Usuário não encontrado para o TraceId: {TraceIdentifier}", HttpContext.TraceIdentifier);
+            return Result.Failure(new Error("TOKEN001", "Usuário não encontrado."));
         }
+
+        var command = new ResetPasswordCommand(request.Password, user);
+        return await _mediator.Send(command);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetUser(Guid id)
+    public async Task<Result> GetUser(Guid id)
     {
         var command = new GetUserCommand(id);
-        var response = await _mediator.Send(command);
-        return Ok(response);
+        return await _mediator.Send(command);
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostUser(RegisterUserCommand command)
-    {
-        try
-        {
-            var response = await _mediator.Send(command);
-            return Ok(new { status = 200, erro = "", mensagem = "Usuário criado" });
-        }
-        catch (Exception ex)
-        {
-            if (ex.Message.Contains("user_already_exist"))
-            {
-                return Conflict(new ProblemDetails
-                {
-                    Status = 409,
-                    Title = "User Already Exist",
-                });
-            }
-
-            return Problem(detail: ex.Message);
-        }
-    }
+    public async Task<Result> PostUser(RegisterUserCommand command) =>  await _mediator.Send(command);
 }

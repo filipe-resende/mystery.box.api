@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Commands;
 
-public class GetAuthenticationTokenCommand(string email, string password) : IRequest<UserTokenDTO>
+public class GetAuthenticationTokenCommand(string email, string password) : IRequest<Result>
 {
     [Required]
     public string Email { get; set; } = email;

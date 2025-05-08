@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Commands;
 
-public class RegisterSteamCardCategoryCommand : IRequest<Guid>
+public class RegisterSteamCardCategoryCommand : IRequest<Result>
 {
     public string Name { get; set; }
     [Required]

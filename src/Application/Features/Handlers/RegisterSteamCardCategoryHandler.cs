@@ -1,14 +1,20 @@
 ﻿namespace Application.Features.Handlers;
 
-public class RegisterSteamCardHandlerCategoryHandler(ISteamCardCategoryRepository repository) : IRequestHandler<RegisterSteamCardCategoryCommand, Guid>
+public class RegisterSteamCardHandlerCategoryHandler(
+    ISteamCardCategoryRepository repository,
+    ILogger<RegisterSteamCardHandlerCategoryHandler> logger
+) : IRequestHandler<RegisterSteamCardCategoryCommand, Result>
 {
     private readonly ISteamCardCategoryRepository _repository = repository;
+    private readonly ILogger<RegisterSteamCardHandlerCategoryHandler> _logger = logger;
 
-    public async Task<Guid> Handle(RegisterSteamCardCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(RegisterSteamCardCategoryCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var steamCard = new SteamCardCategory
+            _logger.LogInformation("Iniciando registro de categoria SteamCard: {Name}", request.Name);
+
+            var steamCardCategory = new SteamCardCategory
             {
                 Name = request.Name,
                 Price = request.Price,
@@ -16,12 +22,16 @@ public class RegisterSteamCardHandlerCategoryHandler(ISteamCardCategoryRepositor
                 Description = request.Description,
             };
 
-            var result = await _repository.Add(steamCard);
-            return result.Id;
+            var result = await _repository.Add(steamCardCategory);
+
+            _logger.LogInformation("Categoria registrada com sucesso. ID: {Id}", result.Id);
+
+            return Result.Success(result.Id);
         }
         catch (Exception ex)
         {
-            throw new Exception($"could not be saved. Error {ex.Message}");
+            _logger.LogError(ex, "Erro ao registrar categoria SteamCard: {Name}", request.Name);
+            return Result.Failure(new Error("STEAMCATREG999", $"Erro ao registrar categoria: {ex.Message}"));
         }
     }
 }

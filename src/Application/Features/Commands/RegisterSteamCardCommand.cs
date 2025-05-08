@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Commands;
 
-public class RegisterSteamCardCommand : IRequest<Guid>
+public class RegisterSteamCardCommand : IRequest<Result>
 {
     public Guid? UserId { get; set; }
     [Required]

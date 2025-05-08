@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Commands;
 
-public class GetAllSteamCardCommand : IRequest<IEnumerable<SteamCardCategoryDTO>>
+public class GetAllSteamCardCommand : IRequest<Result>
 {
 }
 
