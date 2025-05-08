@@ -1,9 +1,8 @@
-﻿using Domain.DTO;
-using Domain.Entities;
+﻿using Domain.Entities;
 
-namespace Domain.Interfaces.Repositories
+namespace Domain.Interfaces.Repositories;
+
+public interface ISteamCardCategoryRepository : IRepository<SteamCardCategory>
 {
-    public interface ISteamCardCategoryRepository : IRepository<SteamCardCategory, SteamCardCategoryDTO>
-    {
-    }
 }
+

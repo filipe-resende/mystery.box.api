@@ -1,11 +1,9 @@
-﻿using Domain.DTO;
-using Domain.Entities;
+﻿using Domain.Entities;
 
-namespace Domain.Interfaces.Repositories
+namespace Domain.Interfaces.Repositories;
+
+public interface IUserRepository : IRepository<User>
 {
-    public interface IUserRepository : IRepository<User, UserDTO>
-    {
-        Task<UserDTO> GetUserByLogin(string email, string password);
-        Task<UserDTO> GetUsersByEmail(string email);
-    }
+    Task<User?> GetUserByLogin(string email, string password);
+    Task<User?> GetUsersByEmail(string email);
 }

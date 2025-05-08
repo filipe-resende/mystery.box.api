@@ -1,42 +1,32 @@
-﻿namespace Application.UseCase
+﻿namespace Application.UseCase;
+
+public class GetUserFromToken(IHttpContextAccessor contextAccessor, IUserRepository _repository, IMapper mapper) : IGetUserFromToken
 {
-    using Domain.DTO;
-    using Domain.Interfaces.Repositories;
-    using Microsoft.AspNetCore.Http;
-    using System.Security.Claims;
+    private readonly IHttpContextAccessor contextAccessor = contextAccessor;
+    private readonly IUserRepository _repository = _repository;
+    private readonly IMapper _mapper = mapper;
 
-    public class GetUserFromToken: IGetUserFromToken
+    public async Task<UserDTO> GetUserIdFromToken()
     {
-        private readonly IHttpContextAccessor contextAccessor;
-        private readonly IUserRepository _repository;
+        var sid =
+            contextAccessor.
+            HttpContext?.
+            User?.
+            Claims?.
+            FirstOrDefault(c => c.Type == ClaimTypes.Sid)?
+            .Value;
 
-        public GetUserFromToken(IHttpContextAccessor contextAccessor, IUserRepository _repository )
+        if (sid != null)
         {
-            this.contextAccessor = contextAccessor;
-            this._repository = _repository;
+            var id = Guid.Parse(sid);
+            var user = await _repository.GetById(id);
+
+            return _mapper.Map<UserDTO>(user);
         }
-
-        public async Task<UserDTO> GetUserIdFromToken()
+        else
         {
-            // Acesse as reivindicações do token JWT através do HttpContext
-            var sid = 
-                contextAccessor.
-                HttpContext?.
-                User?.
-                Claims?.
-                FirstOrDefault(c => c.Type == ClaimTypes.Sid)?
-                .Value;
-
-            if (sid != null)
-            {
-                var id = Guid.Parse(sid);
-                return await _repository.GetById(id);
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
-
 }
+

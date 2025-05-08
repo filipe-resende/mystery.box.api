@@ -1,12 +1,11 @@
-﻿namespace Domain.Interfaces.Repositories
+﻿namespace Domain.Interfaces.Repositories;
+
+public interface IRepository<TEntity> : IDisposable
+    where TEntity : class
 {
-    public interface IRepository<TEntity, TEntityDTO> : IDisposable
-        where TEntity : class
-    {
-        Task<TEntity> Add(TEntityDTO entity);
-        Task<TEntityDTO> GetById(Guid id);
-        IEnumerable<TEntityDTO> GetAll();
-        Task Update(TEntityDTO entity);
-        void Remove(int id);
-    }
+    Task<TEntity> Add(TEntity entity);
+    Task<TEntity> GetById(Guid id);
+    Task<IEnumerable<TEntity>> GetAll();
+    Task Update(TEntity entity);
+    void Remove(int id);
 }
