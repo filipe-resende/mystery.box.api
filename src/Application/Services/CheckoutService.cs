@@ -1,8 +1,6 @@
-﻿using Domain.Entities;
+﻿namespace Application.Services;
 
-namespace Application.Services;
-
-public class CheckoutService(HttpClient httpClient) : ICheckoutRepository
+public class CheckoutService(HttpClient httpClient) : ICheckoutService
 {
     private readonly HttpClient _httpClient = httpClient;
 

@@ -1,6 +1,5 @@
 ﻿global using Domain.DTO;
 global using Domain.Interfaces.Repositories;
-global using Domain.Interfaces.Service;
 global using System.Security.Claims;
 global using System.Text;
 global using MediatR;
@@ -17,3 +16,8 @@ global using System.Net.Mail;
 global using System.Text.RegularExpressions;
 global using Newtonsoft.Json;
 global using Domain.Entities;
+global using Domain.Shared;
+global using Microsoft.Extensions.Logging;
+global using Domain.Interfaces.Service;
+global using MercadoPago.Client.Order;
+global using MercadoPago.Config;

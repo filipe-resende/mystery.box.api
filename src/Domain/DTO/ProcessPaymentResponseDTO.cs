@@ -2,7 +2,6 @@
 
 public class ProcessPaymentResponseDTO
 {
-    public string Code { get; set; }
-    public string Message { get; set; }
-    public string Reference { get; set; }
+    public int Status { get; set; }
+    public string Content { get; set; }
 }

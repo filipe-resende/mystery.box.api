@@ -7,48 +7,15 @@ public class SteamCardController(IMediator mediator) : ControllerBase
     private readonly IMediator _mediator = mediator;
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(Guid id)
-    {
-        var command = new GetSteamCardCommand(id);
-        var response = await _mediator.Send(command);
-        return Ok(response);
-    }
+    public async Task<Result> Get(Guid id) => await _mediator.Send(new GetSteamCardCommand(id));
 
     [HttpGet("category")]
-    public async Task<IActionResult> GetAll()
-    {
-        var command = new GetAllSteamCardCommand();
-        var response = await _mediator.Send(command);
-        return Ok(response);
-    }
+    public async Task<Result> GetAll() => await _mediator.Send(new GetAllSteamCardCommand());
 
     [HttpPost]
-    public async Task<IActionResult> Post(RegisterSteamCardCommand command)
-    {
-        var response = await _mediator.Send(command);
-        return Ok(response);
-    }
+    public async Task<Result> Post(RegisterSteamCardCommand command) => await _mediator.Send(command);
 
     [HttpPost("category")]
-    public async Task<IActionResult> PostCategory(RegisterSteamCardCategoryCommand command)
-    {
-        var response = await _mediator.Send(command);
-        return Ok(response);
-    }
-
-    //[HttpPut]
-    //public async Task<IActionResult> Put(AlteraPessoaCommand command)
-    //{
-    //    var response = await _mediator.Send(command);
-    //    return Ok(response);
-    //}
-
-    //[HttpDelete("{id}")]
-    //public async Task<IActionResult> Delete(int id)
-    //{
-    //    var obj = new ExcluiPessoaCommand { Id = id };
-    //    var result = await _mediator.Send(obj);
-    //    return Ok(result);
-    //}
+    public async Task<Result> PostCategory(RegisterSteamCardCategoryCommand command) => await _mediator.Send(command);
 }
 

@@ -1,5 +1,5 @@
 ﻿namespace Application.Features.Commands;
 
-public class ActiverUserCommand : IRequest<string>
+public class ActiverUserCommand : IRequest<Result>
 {
 }

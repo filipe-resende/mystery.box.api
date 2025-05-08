@@ -27,8 +27,7 @@ public abstract class Repository<TEntity>(Context dbContext) : IDisposable, IRep
 
     public async Task<IEnumerable<TEntity>> GetAll()
     {
-        var entities = await dbContext.Set<TEntity>().ToListAsync();
-        return entities;
+       return await dbContext.Set<TEntity>().ToListAsync();
     }
 
     public async Task Update(TEntity entity)
