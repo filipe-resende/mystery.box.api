@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Application.Mappings;
+﻿namespace Application.Mappings;
 
 public class MappingProfile : Profile
 {

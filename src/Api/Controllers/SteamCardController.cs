@@ -9,6 +9,7 @@ public class SteamCardController(IMediator mediator) : ControllerBase
     [HttpGet("{id}")]
     public async Task<Result> Get(Guid id) => await _mediator.Send(new GetSteamCardCommand(id));
 
+    [AllowAnonymous]
     [HttpGet("category")]
     public async Task<Result> GetAll() => await _mediator.Send(new GetAllSteamCardCommand());
 

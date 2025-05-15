@@ -26,7 +26,7 @@ public class RegisterSteamCardHandlerCategoryHandler(
 
             _logger.LogInformation("Categoria registrada com sucesso. ID: {Id}", result.Id);
 
-            return Result.Success(result.Id);
+            return Result.Success(result);
         }
         catch (Exception ex)
         {

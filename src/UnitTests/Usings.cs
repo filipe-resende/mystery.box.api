@@ -1,0 +1,16 @@
+﻿global using Application.Features.Handlers;
+global using Application.Features.Commands;
+global using AutoMapper;
+global using Domain.DTO;
+global using Domain.Entities;
+global using Domain.Interfaces.Repositories;
+global using FluentAssertions;
+global using Moq;
+global using Xunit;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.Logging;
+global using Application.Services;
+global using Domain.Shared;
+global using System.Security.Claims;
+global using System.IdentityModel.Tokens.Jwt;

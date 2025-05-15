@@ -18,7 +18,7 @@ public class GetForgottenUserHandler(
         {
             _logger.LogInformation("Solicitação de recuperação de senha iniciada para o email: {Email}", request.Email);
 
-            var user = await _userRepository.GetUsersByEmail(request.Email);
+            var user = await _userRepository.GetUserByEmail(request.Email);
 
             if (user == null)
             {

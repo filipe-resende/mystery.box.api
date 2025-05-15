@@ -1,73 +1,36 @@
 ﻿namespace Application.Features.Handlers;
 
 public class ProcessPaymentHandler(
-    IGetUserFromToken getUserFromToken,
+    IPaymentGatewayService paymentGatewayService,
+    IUserRepository repository,
     ILogger<ProcessPaymentHandler> logger
 ) : IRequestHandler<ProcessPaymentCommand, Result>
 {
-    private readonly IGetUserFromToken _getUserFromToken = getUserFromToken;
+    private readonly IPaymentGatewayService _paymentGateway = paymentGatewayService;
     private readonly ILogger<ProcessPaymentHandler> _logger = logger;
+    private readonly IUserRepository _repository = repository;
 
     public async Task<Result> Handle(ProcessPaymentCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var user = await _getUserFromToken.GetUserIdFromToken();
+            var user = await _repository.GetById(request.UserId);
 
             if (user == null)
             {
-                _logger.LogWarning("Usuário não encontrado no token.");
+                _logger.LogWarning("Usuário não encontrado no banco para o ID: {UserId}", user);
                 return Result.Failure(new Error("PAYMENT001", "Usuário não autenticado."));
             }
 
+            request.Payer.Email = user.Email;
+
             _logger.LogInformation("Iniciando processamento de pagamento para o usuário: {UserId}", user.Id);
 
-            MercadoPagoConfig.AccessToken = "SUA_ACCESS_TOKEN_AQUI";
+            //var response = await _paymentGateway.ProcessAsync(request);
 
-            var orderRequest = new OrderCreateRequest
-            {
-                Type = "online",
-                TotalAmount = request.Amount.ToString("F2", System.Globalization.CultureInfo.InvariantCulture),
-                ExternalReference = $"order_{Guid.NewGuid()}",
-                ProcessingMode = "manual",
-                Payer = new OrderPayerRequest
-                {
-                    Email = request.PayerEmail
-                }
-            };
+            var mock = new ProcessPaymentResponseDTO() {TransactionId = 123456, Message = "approved", Status = "approved" };
 
-            var client = new OrderClient();
-
-            // Cria o pedido
-            var order = await client.CreateAsync(orderRequest);
-
-            // Cria a transação de pagamento
-            var transactionRequest = new OrderTransactionRequest
-            {
-                Payments = new List<OrderPaymentRequest>
-                {
-                    new OrderPaymentRequest
-                    {
-                        Amount = request.Amount.ToString("F2", System.Globalization.CultureInfo.InvariantCulture),
-                        PaymentMethod = new OrderPaymentMethodRequest
-                        {
-                            Id = request.Card.BrandId,
-                            Type = "credit_card",
-                            Token = request.Card.BrandId,
-                            Installments = request.Installments
-                        }
-                    }
-                }
-            };
-
-            var transaction = await client.CreateTransactionAsync(order.Id, transactionRequest);
-
-
-            return Result.Success(new ProcessPaymentResponseDTO
-            {
-                Status = transaction.ApiResponse.StatusCode,
-                Content = transaction.ApiResponse.Content
-            });
+            return Result.Success(mock);
         }
         catch (Exception ex)
         {

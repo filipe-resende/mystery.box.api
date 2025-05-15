@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250508170229_init")]
+    [Migration("20250508235337_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -292,6 +292,9 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("User");
@@ -306,7 +309,8 @@ namespace Infrastructure.Data.Migrations
                             Email = "filipe@email.com",
                             Name = "Filipe Castro",
                             Password = "123456",
-                            Phone = "31999999999"
+                            Phone = "31999999999",
+                            Role = 1
                         });
                 });
 

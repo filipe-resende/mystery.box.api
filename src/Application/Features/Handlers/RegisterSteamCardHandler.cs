@@ -29,7 +29,7 @@ public class RegisterSteamCardHandler(
 
             _logger.LogInformation("SteamCard registrado com sucesso. ID: {Id}", result.Id);
 
-            return Result.Success(result.Id);
+            return Result.Success(result);
         }
         catch (Exception ex)
         {

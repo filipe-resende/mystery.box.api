@@ -34,5 +34,8 @@ public class UserMap : IEntityTypeConfiguration<User>
         builder.HasMany(p => p.Payments)
                .WithOne(p => p.User)
                .HasForeignKey(p => p.UserId);
+
+        builder.Property(p => p.Role)
+                .IsRequired();
     }
 }

@@ -7,7 +7,6 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
     private readonly IMediator _mediator = mediator;
     private readonly ILogger<UserController> _logger = logger;
 
-
     [HttpPost]
     [AllowAnonymous]
     [Route("signIn")]

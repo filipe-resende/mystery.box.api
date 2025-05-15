@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Commands;
 
-public class ProcessPaymentCommand(Guid userId) : IRequest<Result>
+public class GetPaymentCommand(Guid userId) : IRequest<Result>
 {
     public Guid UserId { get; set; } = userId;
 
@@ -18,12 +18,3 @@ public class ProcessPaymentCommand(Guid userId) : IRequest<Result>
 
     public IEnumerable<Guid> Cards { get; set; }
 }
-
-public class Payer()
-{ 
-    public string? Email { get; set; }
-    public Identification Identification {  get; set; } 
-};
-
-public record Identification(string Type, string Number);
-

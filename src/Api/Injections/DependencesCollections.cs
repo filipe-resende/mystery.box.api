@@ -8,17 +8,13 @@ public static class DependencyRepositoryCollections
         service.AddScoped<ISteamCardRepository, SteamCardRepository>();
         service.AddScoped<ISteamCardCategoryRepository, SteamCardCatergoryRepository>();
         service.AddScoped<IUserRepository, UserRepository>();
-        service.AddScoped<ICheckoutService, CheckoutService>();
-        service.AddScoped<IGetUserFromToken, GetUserFromToken>();
+        service.AddScoped<IPaymentGatewayService, MercadoPagoPaymentGatewayService>();
         service.AddScoped<IAuthenticationService, AuthenticationService>();
         service.AddScoped<IEmailService, EmailService>();
 
         service.AddHttpContextAccessor();
-        service.AddHttpClient<ICheckoutService, CheckoutService>(client =>
-        {
-            string urlBase = Environment.GetEnvironmentVariable("Checkout_Base_Url");
-            client.BaseAddress = new Uri(urlBase);
-        });
+        service.AddScoped<IPaymentGatewayService, MercadoPagoPaymentGatewayService>();
+      
 
         return service;
     }
