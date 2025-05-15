@@ -21,6 +21,8 @@ public class User
 
     public string Phone { get; set; }
 
+    public Role Role { get; set; }
+
     public virtual ICollection<SteamCard> SteamCards { get; set; }
     public virtual ICollection<Payment> Payments { get; set; }
 

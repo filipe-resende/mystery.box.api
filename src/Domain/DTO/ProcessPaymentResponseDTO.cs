@@ -2,6 +2,7 @@
 
 public class ProcessPaymentResponseDTO
 {
-    public int Status { get; set; }
-    public string Content { get; set; }
+    public long? TransactionId { get; set; }
+    public string Status { get; set; }
+    public string Message { get; set; }
 }

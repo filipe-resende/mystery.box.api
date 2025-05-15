@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Application.Services;
+﻿namespace Application.Services;
 
 public class AuthenticationService(IConfiguration _configuration) : IAuthenticationService
 {

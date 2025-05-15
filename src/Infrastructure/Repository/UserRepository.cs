@@ -8,7 +8,7 @@ public class UserRepository(Context dbContext) : Repository<User>(dbContext), IU
             .FirstOrDefaultAsync(e => e.Email == email && e.Password == password);
     }
 
-    public async Task<User?> GetUsersByEmail(string email)
+    public async Task<User?> GetUserByEmail(string email)
     {
         return await dbContext.Set<User>()
           .FirstOrDefaultAsync(e => e.Email == email);

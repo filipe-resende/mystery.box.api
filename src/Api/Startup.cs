@@ -1,4 +1,7 @@
-﻿namespace Api;
+﻿using Azure.Core;
+using System.IO;
+
+namespace Api;
 
 public class Startup(IConfigurationRoot configuration)
 {
@@ -6,10 +9,33 @@ public class Startup(IConfigurationRoot configuration)
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend", policy =>
+            {
+                policy.WithOrigins("https://localhost:3000")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials();
+            });
+        });
+
+        string jwtSecret = Configuration["Jwt:Secret"];
+        var key = Encoding.ASCII.GetBytes(jwtSecret!);
+
+        services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(
+                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+        });
+
+        services.AddSignalR(); 
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddAutoMapper(typeof(MappingProfile));
         services.AddSingleton<IConfiguration>(Configuration);
+        services.AddLogging();
 
         services.AddRepository();
 
@@ -20,48 +46,83 @@ public class Startup(IConfigurationRoot configuration)
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "PostsApi", Version = "v1" });
-            options.EnableAnnotations();
-        });
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "MisteryBox API",
+                Version = "v1",
+                Description = "A API to manage MisteryBox web site"
+            });
 
-        services.AddConflitExceptionFilter();
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Digite: Bearer {seu_token}"
+            });
 
-        services.Configure<RouteOptions>(options =>
-        {
-            options.LowercaseUrls = true;
-            options.LowercaseQueryStrings = true;
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
         });
 
         services.AddDbContext<Context>(options =>
         {
-
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             options.EnableSensitiveDataLogging();
         });
 
+        services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.RequireHttpsMetadata = false;
+            options.SaveToken = true;
 
-        string jwtSecret = Configuration["JwtSecret"];
-        var key = Encoding.ASCII.GetBytes(jwtSecret!);
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true
+            };
 
-        services.
-           AddAuthentication(x =>
-           {
-               x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-               x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-           })
-           .AddJwtBearer(x =>
-           {
-               x.RequireHttpsMetadata = false;
-               x.SaveToken = true;
-               x.TokenValidationParameters = new TokenValidationParameters()
-               {
-                   ValidateIssuerSigningKey = true,
-                   IssuerSigningKey = new SymmetricSecurityKey(key),
-                   ValidateIssuer = false,
-                   ValidateLifetime = false,
-                   ValidateAudience = false
-               };
-           });
+            // Lê o token do cookie HttpOnly
+            options.Events = new JwtBearerEvents
+            {
+
+                OnMessageReceived = context =>
+                {
+                    var path = context.HttpContext.Request.Path;
+
+                    var token = context.Request.Cookies["access_token"];
+
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        context.Token = token;
+                    }
+
+                    return Task.CompletedTask;
+                }
+            };
+        });
+
+        services.AddAuthorization();
+
     }
 
     public void Configure(IApplicationBuilder app)
@@ -74,11 +135,14 @@ public class Startup(IConfigurationRoot configuration)
         app.UseSwaggerUI();
         app.UseSwagger();
 
-        app.UseCors(x => x
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod());
+        app.UseCors("AllowFrontend");
+
         app.UseHttpsRedirection();
-        app.UseEndpoints(endpoints => endpoints.MapControllers());
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapHub<NotificationHub>("/hub/notificacoes");
+        });
     }
 }

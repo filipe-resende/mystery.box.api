@@ -55,6 +55,7 @@ namespace Infrastructure.Data.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CPF = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
@@ -136,8 +137,8 @@ namespace Infrastructure.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "Active", "CPF", "CreatedAt", "Email", "Name", "Password", "Phone" },
-                values: new object[] { new Guid("a85a95bd-9448-4945-b621-9f5b6b75e329"), true, "12345678900", new DateTime(2024, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc), "filipe@email.com", "Filipe Castro", "123456", "31999999999" });
+                columns: new[] { "Id", "Active", "CPF", "CreatedAt", "Email", "Name", "Password", "Phone", "Role" },
+                values: new object[] { new Guid("a85a95bd-9448-4945-b621-9f5b6b75e329"), true, "12345678900", new DateTime(2024, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc), "filipe@email.com", "Filipe Castro", "123456", "31999999999", 1 });
 
             migrationBuilder.InsertData(
                 table: "Payment",

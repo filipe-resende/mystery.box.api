@@ -14,7 +14,7 @@ public class RegisterUserHandler(
         {
             _logger.LogInformation("Tentando registrar novo usuário com email: {Email}", request.Email);
 
-            var existingUser = await _repository.GetUsersByEmail(request.Email);
+            var existingUser = await _repository.GetUserByEmail(request.Email);
 
             if (existingUser != null)
             {
@@ -26,8 +26,9 @@ public class RegisterUserHandler(
             {
                 Name = request.Name,
                 Email = request.Email,
-                Password = request.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 CPF = request.CPF,
+                Role = Role.Registered,
                 Phone = request.Phone
             };
 
@@ -35,7 +36,7 @@ public class RegisterUserHandler(
 
             _logger.LogInformation("Usuário registrado com sucesso - ID: {UserId}", result.Id);
 
-            return Result.Success(result.Id);
+            return Result.Success(result);
         }
         catch (Exception ex)
         {

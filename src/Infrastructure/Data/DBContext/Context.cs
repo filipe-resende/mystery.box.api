@@ -30,10 +30,11 @@ public class Context(DbContextOptions<Context> options) : DbContext(options)
             Id = userId,
             Name = "Filipe Castro",
             Email = "filipe@email.com",
-            Password = "123456",
+            Password = "$2a$11$IcNvB5j1k5dmwIviLHF48uu5j.6u4S1Thy/xW6zkTyug9OaX56YgC",
             CPF = "12345678900",
             Phone = "31999999999",
             CreatedAt = createdAt,
+            Role = Role.Registered,
             Active = true
         });
 
@@ -42,7 +43,7 @@ public class Context(DbContextOptions<Context> options) : DbContext(options)
             Id = categoryId,
             Name = "Steam R$50",
             Price = 50.0f,
-            Thumb = "/img/steam50.png",
+            Thumb = "/games/2.jpg",
             Description = "Cartão Steam de R$50",
             Active = true,
             CreatedAt = createdAt
