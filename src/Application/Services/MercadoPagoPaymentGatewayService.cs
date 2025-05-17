@@ -7,7 +7,7 @@ public class MercadoPagoPaymentGatewayService : IPaymentGatewayService
 
     public MercadoPagoPaymentGatewayService()
     {
-        //MercadoPagoConfig.AccessToken = "test_token";
+        MercadoPagoConfig.AccessToken = "TEST-7448109333317481-100923-68f94c20d7c20e0294474ae8371c7f1b-127600031";
 
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.Authorization =
@@ -59,5 +59,17 @@ public class MercadoPagoPaymentGatewayService : IPaymentGatewayService
         IEnumerable<PaymentsMethodsDTO> methods = JsonConvert.DeserializeObject<IEnumerable<PaymentsMethodsDTO>>(content);
 
         return methods.FirstOrDefault();
+    }
+
+    public async Task<ProcessPaymentResponseDTO> GetPaymentAsync(long paymentId)
+    {
+        MercadoPago.Resource.Payment.Payment payment = await client.GetAsync(paymentId);
+
+        return new ProcessPaymentResponseDTO
+        {
+            TransactionId = payment.Id,
+            Status = payment.Status,
+            Message = payment.StatusDetail
+        };
     }
 }

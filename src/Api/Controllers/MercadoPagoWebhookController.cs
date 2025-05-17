@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿namespace Api.Controllers;
 
-namespace Api.Controllers;
 [ApiController]
 [Route("webhook/mercadopago")]
 public class MercadoPagoWebhookController(IHubContext<NotificationHub> hubContext) : ControllerBase

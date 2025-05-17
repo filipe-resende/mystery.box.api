@@ -70,4 +70,20 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
 
     [HttpPost]
     public async Task<Result> PostUser(RegisterUserCommand command) =>  await _mediator.Send(command);
+
+    [HttpPost]
+    [Route("logout")]
+    [Authorize(Roles = "registered")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Append("access_token", "", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTimeOffset.UtcNow.AddDays(-1) 
+        });
+
+        return Ok(new { message = "Logout realizado com sucesso." });
+    }
 }

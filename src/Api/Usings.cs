@@ -22,3 +22,4 @@ global using Domain.Shared;
 global using System.Text.Json.Serialization;
 global using System.Text.Json;
 global using Api.Hubs;
+global using Microsoft.AspNetCore.SignalR;

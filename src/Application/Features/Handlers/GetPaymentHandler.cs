@@ -1,16 +1,16 @@
 ﻿namespace Application.Features.Handlers;
 
-public class ProcessPaymentHandler(
+public class GetPaymentHandler(
     IPaymentGatewayService paymentGatewayService,
     IUserRepository repository,
-    ILogger<ProcessPaymentHandler> logger
-) : IRequestHandler<ProcessPaymentCommand, Result>
+    ILogger<GetPaymentHandler> logger
+) : IRequestHandler<GetPaymentCommand, Result>
 {
     private readonly IPaymentGatewayService _paymentGateway = paymentGatewayService;
-    private readonly ILogger<ProcessPaymentHandler> _logger = logger;
+    private readonly ILogger<GetPaymentHandler> _logger = logger;
     private readonly IUserRepository _repository = repository;
 
-    public async Task<Result> Handle(ProcessPaymentCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(GetPaymentCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -22,11 +22,9 @@ public class ProcessPaymentHandler(
                 return Result.Failure(new Error("PAYMENT001", "Usuário não autenticado."));
             }
 
-            request.Payer.Email = user.Email;
-
             _logger.LogInformation("Iniciando processamento de pagamento para o usuário: {UserId}", user.Id);
 
-            var response = await _paymentGateway.ProcessAsync(request);
+            var response = await _paymentGateway.GetPaymentAsync(request.PaymentId);
 
             return Result.Success(response);
         }

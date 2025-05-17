@@ -8,7 +8,7 @@ public class AuthenticationService(IConfiguration _configuration) : IAuthenticat
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        string jwtSecret = _configuration["JwtSecret"];
+        string jwtSecret = _configuration["Jwt:Secret"]!;
 
         if (string.IsNullOrEmpty(jwtSecret))
         {
