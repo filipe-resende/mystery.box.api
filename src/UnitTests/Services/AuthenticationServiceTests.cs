@@ -8,7 +8,7 @@ public class AuthenticationServiceTests
     {
         var inMemorySettings = new Dictionary<string, string>
         {
-            { "JwtSecret", "lY63cLF5xea1wmtbesD1KGsaEJhyqwe88pKzaqKpFGZHu22mPmeFLfjaxyxhufGgRodljS8SUhlwBYx6KvZUwEef4qkBU814D72xgJfUttBlgFEB6Ddu9IayRAWy3r12KEORCkvTxmcXalue0xoC0lYDa3db5Yx5COcjz9GPBos1atEaomZlp9PFAZ1uRwWCfUDuMCalmZwmt3uo1BHbBlISuv5IkOLtFyhvpDcpGR9XTGh2rBwkffxuBzHJkbXJ" } // deve ter 16+ caracteres
+            { "Jwt:Secret", "lY63cLF5xea1wmtbesD1KGsaEJhyqwe88pKzaqKpFGZHu22mPmeFLfjaxyxhufGgRodljS8SUhlwBYx6KvZUwEef4qkBU814D72xgJfUttBlgFEB6Ddu9IayRAWy3r12KEORCkvTxmcXalue0xoC0lYDa3db5Yx5COcjz9GPBos1atEaomZlp9PFAZ1uRwWCfUDuMCalmZwmt3uo1BHbBlISuv5IkOLtFyhvpDcpGR9XTGh2rBwkffxuBzHJkbXJ" }
         };
 
         _config = new ConfigurationBuilder()
@@ -37,8 +37,8 @@ public class AuthenticationServiceTests
         var handler = new JwtSecurityTokenHandler();
         var jwtToken = handler.ReadJwtToken(token);
 
-        jwtToken.Claims.Should().Contain(c => 
-            c.Type == "unique_name" && 
+        jwtToken.Claims.Should().Contain(c =>
+            c.Type == "unique_name" &&
             c.Value == "Fulano");
 
         jwtToken.Claims.Should().Contain(c =>

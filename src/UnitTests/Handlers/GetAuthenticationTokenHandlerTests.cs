@@ -70,7 +70,7 @@ public class GetAuthenticationTokenHandlerTests
         result.Value.User.Role.Should().Be(user.Role);
 
         var cookies = httpContext.Response.Headers["Set-Cookie"].ToString();
-        cookies.Should().Contain("acess_token");
+        cookies.Should().Contain("access_token");
     }
 
     [Fact]
