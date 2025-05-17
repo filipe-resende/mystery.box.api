@@ -25,11 +25,10 @@ public class PaymentController(IMediator mediator, ILogger<UserController> logge
     }
 
 
-    [HttpGet]
+    [HttpGet("{id}")]
     [Authorize(Roles = "registered")]
-    public async Task<Result> Get(GetPaymentCommand command)
+    public async Task<Result> Get(long id)
     {
-        //TODO
         var userId = User.FindFirst(ClaimTypes.Sid)?.Value;
 
         if (userId == null)
@@ -38,7 +37,7 @@ public class PaymentController(IMediator mediator, ILogger<UserController> logge
             return Result.Failure(new Error("TOKEN001", "Usuário não encontrado."));
         }
 
-        command.UserId = Guid.Parse(userId);
+        var command = new GetPaymentCommand(Guid.Parse(userId), id);
 
         return await _mediator.Send(command);
     }
