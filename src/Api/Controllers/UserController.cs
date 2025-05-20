@@ -86,5 +86,4 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
 
         return Ok(new { message = "Logout realizado com sucesso." });
     }
-
 }
