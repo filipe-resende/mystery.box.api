@@ -62,7 +62,7 @@ public class GetAuthenticationTokenHandler(
                 Secure = true,
                 SameSite = SameSiteMode.None,
                 Path = "/",
-                Expires = DateTimeOffset.UtcNow.AddHours(2),
+                Expires = DateTimeOffset.UtcNow.AddMinutes(15),
             });
 
             _logger.LogInformation("Token JWT gerado com sucesso para o usuário: {UserId}", user.Id);

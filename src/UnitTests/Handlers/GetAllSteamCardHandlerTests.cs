@@ -4,14 +4,14 @@ public class GetAllSteamCardHandlerTests
 {
     private readonly Mock<ISteamCardCategoryRepository> _repositoryMock;
     private readonly Mock<IMapper> _mapperMock;
-    private readonly Mock<Microsoft.Extensions.Logging.ILogger<GetAllSteamCardHandler>> _loggerMock;
+    private readonly Mock<ILogger<GetAllSteamCardHandler>> _loggerMock;
     private readonly GetAllSteamCardHandler _handler;
 
     public GetAllSteamCardHandlerTests()
     {
         _repositoryMock = new Mock<ISteamCardCategoryRepository>();
         _mapperMock = new Mock<IMapper>();
-        _loggerMock = new Mock<Microsoft.Extensions.Logging.ILogger<GetAllSteamCardHandler>>();
+        _loggerMock = new Mock<ILogger<GetAllSteamCardHandler>>();
 
         _handler = new GetAllSteamCardHandler(
             _repositoryMock.Object,
@@ -26,14 +26,14 @@ public class GetAllSteamCardHandlerTests
         // Arrange
         var fakeEntities = new List<SteamCardCategory>
         {
-            new() { Id = Guid.NewGuid(), Name = "Ação", Active = true, CreatedAt = DateTime.UtcNow },
-            new() { Id = Guid.NewGuid(), Name = "Aventura", Active = true, CreatedAt = DateTime.UtcNow }
+            new() { Id = Guid.NewGuid(), Title = "Ação", Active = true, CreatedAt = DateTime.UtcNow },
+            new() { Id = Guid.NewGuid(), Title = "Aventura", Active = true, CreatedAt = DateTime.UtcNow }
         };
 
         var fakeDTOs = new List<SteamCardCategoryDTO>
         {
-            new() { Id = fakeEntities[0].Id, Name = "Ação", Active = true },
-            new() { Id = fakeEntities[1].Id, Name = "Aventura", Active = true }
+            new() { Id = fakeEntities[0].Id, Title = "Ação", Active = true },
+            new() { Id = fakeEntities[1].Id, Title = "Aventura", Active = true }
         };
 
         _repositoryMock.Setup(r => r.GetAll()).ReturnsAsync(fakeEntities);

@@ -25,9 +25,10 @@ public class RegisterUserHandler(
             var user = new User
             {
                 Name = request.Name,
+                LastName = request.LastName,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                CPF = request.CPF,
+                Identification = new Domain.Entities.Identification() { Type = request.IdentificationType, Number = request.IdentificationNumber },
                 Role = Role.Registered,
                 Phone = request.Phone
             };

@@ -4,17 +4,29 @@ public class ProcessPaymentHandlerTests
 {
     private readonly Mock<IPaymentGatewayService> _paymentGatewayMock = new();
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
-    private readonly Mock<ILogger<ProcessPaymentHandler>> _loggerMock = new();
+    private readonly Mock<IPaymentRepository> _paymentRepositoryMock = new();
+    private readonly IMapper _mapper;
+    private readonly Mock<ILogger<PostCreditCardPaymentHandler>> _loggerMock = new();
 
-    private readonly ProcessPaymentHandler _handler;
+    private readonly PostCreditCardPaymentHandler _handler;
 
     public ProcessPaymentHandlerTests()
     {
-        _handler = new ProcessPaymentHandler(
-            _paymentGatewayMock.Object,
-            _userRepositoryMock.Object,
-            _loggerMock.Object
-        );
+
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<MappingProfile>();
+        });
+
+        _mapper = config.CreateMapper();
+
+        _handler = new PostCreditCardPaymentHandler(
+                   _paymentGatewayMock.Object,
+                   _userRepositoryMock.Object,
+                   _paymentRepositoryMock.Object,
+                   _mapper,
+                   _loggerMock.Object
+               );
     }
 
     [Fact]
@@ -40,17 +52,28 @@ public class ProcessPaymentHandlerTests
 
         _userRepositoryMock.Setup(x => x.GetById(userId)).ReturnsAsync(user);
 
-        var paymentResponse = new ProcessPaymentResponseDTO
+        var mpPayment = new MercadoPago.Resource.Payment.Payment
         {
-            TransactionId= 123456,
-            Status = "201",
-            Message = "Pagamento processado com sucesso"
+            Id = 123456789,
+            Status = "approved",
+            ExternalReference = "REF-001",
+            StatusDetail = "Pagamento processado com sucesso",
+            TransactionAmount = 100,
+            Payer = new PaymentPayer
+            {
+                Email = "cliente@teste.com",
+                Identification = new MercadoPago.Resource.Common.Identification
+                {
+                    Type = "CPF",
+                    Number = "12345678900"
+                }
+            }
         };
 
-        _paymentGatewayMock.Setup(x => x.ProcessAsync(It.IsAny<ProcessPaymentCommand>()))
-            .ReturnsAsync(paymentResponse);
+        _paymentGatewayMock.Setup(x => x.PostCreditCardAsync(It.IsAny<PostCreditCardPaymentCommand>()))
+            .ReturnsAsync(mpPayment);
 
-        var command = new ProcessPaymentCommand(userId)
+        var command = new PostCreditCardPaymentCommand(userId)
         {
             TransactionAmount = 100,
             Payer = new Payer { Email = "cliente@teste.com" },
@@ -64,7 +87,9 @@ public class ProcessPaymentHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         var response = result.Value.As<ProcessPaymentResponseDTO>();
-        response.Status.Should().Be("201");
+
+        response.TransactionId.Should().Be(123456789);
+        response.Status.Should().Be("approved");
         response.Message.Should().Be("Pagamento processado com sucesso");
     }
 
@@ -73,7 +98,7 @@ public class ProcessPaymentHandlerTests
     {
         var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal() };
 
-        var command = new ProcessPaymentCommand(Guid.NewGuid());
+        var command = new PostCreditCardPaymentCommand(Guid.NewGuid());
 
         var result = await _handler.Handle(command, default);
 
@@ -95,7 +120,7 @@ public class ProcessPaymentHandlerTests
 
         _userRepositoryMock.Setup(x => x.GetById(userId)).ReturnsAsync((User)null!);
 
-        var command = new ProcessPaymentCommand(Guid.NewGuid());
+        var command = new PostCreditCardPaymentCommand(Guid.NewGuid());
 
         var result = await _handler.Handle(command, default);
 
@@ -118,7 +143,7 @@ public class ProcessPaymentHandlerTests
         _userRepositoryMock.Setup(x => x.GetById(userId))
             .ThrowsAsync(new Exception("Falha interna"));
 
-        var command = new ProcessPaymentCommand(userId);
+        var command = new PostCreditCardPaymentCommand(userId);
 
         var result = await _handler.Handle(command, default);
 

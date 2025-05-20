@@ -14,3 +14,6 @@ global using Application.Services;
 global using Domain.Shared;
 global using System.Security.Claims;
 global using System.IdentityModel.Tokens.Jwt;
+global using MercadoPago.Resource.Payment;
+global using System.Text.Json;
+global using Application.Mappings;

@@ -23,12 +23,13 @@ public class GetUserHandlerTests
         // Arrange
         var userId = Guid.NewGuid();
 
+
         var userEntity = new User
         {
             Id = userId,
             Name = "João Teste",
             Email = "joao@email.com",
-            CPF = "12345678901",
+            Identification = new Domain.Entities.Identification() { Type = "cpf", Number= "12345678901" },
             Phone = "31999999999",
             Role = Role.Registered,
             Active = true,

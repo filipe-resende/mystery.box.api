@@ -16,9 +16,9 @@ public class RegisterSteamCardHandlerCategoryHandler(
 
             var steamCardCategory = new SteamCardCategory
             {
-                Name = request.Name,
-                Price = request.Price,
-                Thumb = request.Thumb,
+                Title = request.Name,
+                UnitPrice = request.Price,
+                PictureUrl = request.Thumb,
                 Description = request.Description,
             };
 
