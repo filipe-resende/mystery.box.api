@@ -1,7 +1,4 @@
-﻿using Azure.Core;
-using System.IO;
-
-namespace Api;
+﻿namespace Api;
 
 public class Startup(IConfigurationRoot configuration)
 {
@@ -33,7 +30,7 @@ public class Startup(IConfigurationRoot configuration)
         services.AddSignalR(); 
         services.AddControllers();
         services.AddEndpointsApiExplorer();
-        services.AddAutoMapper(typeof(MappingProfile));
+        services.AddAutoMapper(typeof(MappingProfile), typeof(PaymentProfile));
         services.AddSingleton<IConfiguration>(Configuration);
         services.AddLogging();
 

@@ -26,7 +26,8 @@ public class RegisterUserHandlerTests
             Name = "Fulano",
             Email = "fulano@email.com",
             Password = "123456",
-            CPF = "12345678901",
+            IdentificationNumber = "12345678901",
+            IdentificationType = "cpf",
             Phone = "31999999999"
         };
 
@@ -54,7 +55,8 @@ public class RegisterUserHandlerTests
             Name = "Fulano",
             Email = "ja@existe.com",
             Password = "123456",
-            CPF = "12345678901",
+            IdentificationNumber = "12345678901",
+            IdentificationType = "cpf",
             Phone = "31999999999"
         };
 
@@ -78,7 +80,8 @@ public class RegisterUserHandlerTests
             Name = "Erro",
             Email = "erro@email.com",
             Password = "123456",
-            CPF = "12345678901",
+            IdentificationNumber = "12345678901",
+            IdentificationType = "cpf",
             Phone = "31999999999"
         };
 

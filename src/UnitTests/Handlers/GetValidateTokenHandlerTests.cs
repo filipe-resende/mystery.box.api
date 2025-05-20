@@ -31,7 +31,7 @@ public class GetValidateTokenHandlerTests
             Name = "Usuário",
             Email = "usuario@email.com",
             Role = Role.Registered,
-            CPF = "12345678900",
+            Identification = new Domain.Entities.Identification() { Type = "cpf", Number = "12345678901" },
             Phone = "31999999999",
             Active = true,
             CreatedAt = DateTime.UtcNow

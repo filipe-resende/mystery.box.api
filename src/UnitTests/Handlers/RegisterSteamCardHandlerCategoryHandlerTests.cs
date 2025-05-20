@@ -22,17 +22,17 @@ public class RegisterSteamCardHandlerCategoryHandlerTests
         var category = new SteamCardCategory
         {
             Id = Guid.NewGuid(),
-            Name = "Aventura",
-            Price = 99.90f,
-            Thumb = "img.jpg",
+            Title = "Aventura",
+            UnitPrice = 99.90f,
+            PictureUrl = "img.jpg",
             Description = "Categoria de jogos de aventura"
         };
 
         var command = new RegisterSteamCardCategoryCommand
         {
-            Name = category.Name,
-            Price = category.Price,
-            Thumb = category.Thumb,
+            Name = category.Title,
+            Price = category.UnitPrice,
+            Thumb = category.PictureUrl,
             Description = category.Description
         };
 
@@ -45,9 +45,9 @@ public class RegisterSteamCardHandlerCategoryHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         var response = result.Value.As<SteamCardCategory>();
-        response.Name.Should().Be(category.Name);
-        response.Price.Should().Be(category.Price);
-        response.Thumb.Should().Be(category.Thumb);
+        response.Title.Should().Be(category.Title);
+        response.UnitPrice.Should().Be(category.UnitPrice);
+        response.PictureUrl.Should().Be(category.PictureUrl);
         response.Description.Should().Be(category.Description);
     }
 

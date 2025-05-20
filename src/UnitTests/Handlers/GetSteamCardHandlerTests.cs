@@ -26,7 +26,7 @@ public class GetSteamCardHandlerTests
         var categoryEntity = new SteamCardCategory
         {
             Id = Guid.NewGuid(),
-            Name = "Games",
+            Title = "Games",
             Active = true,
             CreatedAt = DateTime.UtcNow
         };
@@ -45,7 +45,7 @@ public class GetSteamCardHandlerTests
         var categoryDTO = new SteamCardCategoryDTO
         {
             Id = categoryEntity.Id,
-            Name = categoryEntity.Name,
+            Title = categoryEntity.Title,
             Active = categoryEntity.Active,
             CreatedAt = categoryEntity.CreatedAt
         };
@@ -77,7 +77,7 @@ public class GetSteamCardHandlerTests
         returned.Key.Should().Be("ABC-123");
         returned.Description.Should().Be("Cartão de presente Steam");
         returned.SteamCardCategory.Should().NotBeNull();
-        returned.SteamCardCategory.Name.Should().Be("Games");
+        returned.SteamCardCategory.Title.Should().Be("Games");
     }
 
 

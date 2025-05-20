@@ -14,7 +14,7 @@ public class MercadoPagoPaymentGatewayService : IPaymentGatewayService
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", MercadoPagoConfig.AccessToken);
     }
 
-    public async Task<ProcessPaymentResponseDTO> ProcessAsync(ProcessPaymentCommand request)
+    public async Task<MercadoPago.Resource.Payment.Payment> PostCreditCardAsync(PostCreditCardPaymentCommand request)
     {
         var requestOptions = new RequestOptions();
         requestOptions.CustomHeaders.Add("x-idempotency-key", Guid.NewGuid().ToString());
@@ -23,9 +23,8 @@ public class MercadoPagoPaymentGatewayService : IPaymentGatewayService
         {
             TransactionAmount = request.TransactionAmount,
             Token = request.Token,
-            Description = $"Compras {request.Cards}",
+            Description = "Compra de keys para resgate na plataforma steammysterybox.com",
             Installments = request.Installments,
-            PaymentMethodId = "master",
             Payer = new PaymentPayerRequest
             {
                 Email = request.Payer.Email,
@@ -35,16 +34,10 @@ public class MercadoPagoPaymentGatewayService : IPaymentGatewayService
                     Number = request.Payer.Identification.Number
                 },
             },
+            AdditionalInfo = new PaymentAdditionalInfoRequest { Items = request.Itens }
         };
 
-        MercadoPago.Resource.Payment.Payment payment = await client.CreateAsync(paymentRequest, requestOptions);
-
-        return new ProcessPaymentResponseDTO
-        {
-            TransactionId = payment.Id,
-            Status = payment.Status,
-            Message = payment.StatusDetail
-        };
+        return await client.CreateAsync(paymentRequest, requestOptions);
     }
 
     public async Task<PaymentsMethodsDTO> GetPaymentMethodsByBinAsync(string bin)
@@ -61,15 +54,35 @@ public class MercadoPagoPaymentGatewayService : IPaymentGatewayService
         return methods.FirstOrDefault();
     }
 
-    public async Task<ProcessPaymentResponseDTO> GetPaymentAsync(long paymentId)
+    public async Task<MercadoPago.Resource.Payment.Payment> PostPixAsync(PostPixPaymentCommand command)
     {
-        MercadoPago.Resource.Payment.Payment payment = await client.GetAsync(paymentId);
+        var requestOptions = new RequestOptions();
+        requestOptions.CustomHeaders.Add("x-idempotency-key", Guid.NewGuid().ToString());
 
-        return new ProcessPaymentResponseDTO
+        var request = new PaymentCreateRequest
         {
-            TransactionId = payment.Id,
-            Status = payment.Status,
-            Message = payment.StatusDetail
+            TransactionAmount = command.TransactionAmount,
+            Description = $"Compras ",
+            PaymentMethodId = "pix",
+            Payer = new PaymentPayerRequest
+            {
+                FirstName = command.Payer!.Name,
+                LastName = command.Payer.LastName,
+                Email = command.Payer.Email,
+                Identification = new IdentificationRequest
+                {
+                    Type = command.Payer.Identification.Type,
+                    Number = command.Payer.Identification.Number,
+                },
+            },
+            AdditionalInfo = {
+                Items = command.Itens
+            },
         };
+
+        return await client.CreateAsync(request, requestOptions);
     }
+
+    public async Task<MercadoPago.Resource.Payment.Payment> GetPaymentAsync(long paymentId) =>
+        await client.GetAsync(paymentId);
 }

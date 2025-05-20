@@ -33,6 +33,9 @@ public class SteamCardMap : IEntityTypeConfiguration<SteamCard>
                .WithMany()
                .HasForeignKey(p => p.SteamCardCategoryId)
                .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Property(p => p.Status)
+              .IsRequired();
     }
 }
 

@@ -22,4 +22,8 @@ global using MercadoPago.Config;
 global using MercadoPago.Client.Payment;
 global using MercadoPago.Client;
 global using MercadoPago.Client.Common;
+global using Payment = Domain.Entities.Payment;
+global using System.Text.Json.Serialization;
 global using System.Text.Json;
+global using Application.DTO;
+global using MercadoPago.Resource.Payment;
