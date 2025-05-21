@@ -15,7 +15,7 @@ public class ProcessPaymentHandlerTests
 
         var config = new MapperConfiguration(cfg =>
         {
-            cfg.AddProfile<MappingProfile>();
+            cfg.AddProfile<PaymentProfile>();
         });
 
         _mapper = config.CreateMapper();
