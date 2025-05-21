@@ -46,6 +46,9 @@ public class GetPaymentHandler(
 
             _mapper.Map(mpPayment, entity);
 
+            entity.UpdateAt = DateTime.UtcNow;
+            entity.PurchaseHistories.Clear();
+
             await _paymentRepository.Update(entity);
 
             return Result.Success(new ProcessPaymentResponseDTO

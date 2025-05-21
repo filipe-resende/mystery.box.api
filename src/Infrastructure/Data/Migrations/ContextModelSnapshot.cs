@@ -105,6 +105,11 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime>("UpdateAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -138,6 +143,7 @@ namespace Infrastructure.Data.Migrations
                             ReleaseDate = new DateTime(2024, 1, 3, 12, 1, 0, 0, DateTimeKind.Utc),
                             Status = "approved",
                             StatusDetail = "accredited",
+                            UpdateAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = new Guid("a85a95bd-9448-4945-b621-9f5b6b75e329")
                         });
                 });
