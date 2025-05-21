@@ -109,6 +109,11 @@ public class Payment
     public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
     /// <summary>
+    /// Data de ultima atualizção do registro na base de dados.
+    /// </summary>
+    public DateTime UpdateAt { get; set; }
+
+    /// <summary>
     /// Cartões Steam vinculados a este pagamento.
     /// </summary>
     public IList<PurchaseHistory> PurchaseHistories { get; set; } = new List<PurchaseHistory>();

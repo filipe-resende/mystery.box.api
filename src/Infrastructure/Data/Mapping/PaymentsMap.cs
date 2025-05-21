@@ -58,6 +58,9 @@ public class PaymentsMap : IEntityTypeConfiguration<Payment>
         builder.Property(p => p.CreatedOn)
                .HasDefaultValueSql("GETDATE()");
 
+        builder.Property(p => p.UpdateAt)
+               .HasDefaultValueSql("GETDATE()");
+
         builder.HasOne(p => p.User)
                .WithMany(u => u.Payments)
                .HasForeignKey(p => p.UserId)

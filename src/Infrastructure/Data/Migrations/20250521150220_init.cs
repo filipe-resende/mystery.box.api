@@ -77,6 +77,7 @@ namespace Infrastructure.Data.Migrations
                     PayerDocumentNumber = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     FullResponseJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>

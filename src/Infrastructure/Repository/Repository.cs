@@ -14,9 +14,7 @@ public abstract class Repository<TEntity>(Context dbContext) : IDisposable, IRep
 
     public async Task<TEntity> GetById(Guid id)
     {
-        var entity = await dbContext.Set<TEntity>().FindAsync(id);
-        dbContext.Set<TEntity>().Entry(entity).State = EntityState.Detached;
-        return entity;
+        return await dbContext.Set<TEntity>().FindAsync(id);
     }
 
     protected IQueryable<TEntity> All()
@@ -32,8 +30,17 @@ public abstract class Repository<TEntity>(Context dbContext) : IDisposable, IRep
 
     public async Task Update(TEntity entity)
     {
-        dbContext.Set<TEntity>().Update(entity);
-        await dbContext.SaveChangesAsync();
+        try
+        {
+            dbContext.Set<TEntity>().Update(entity);
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+
+            throw ex;
+        }
+       
     }
     public void Remove(int id)
     {

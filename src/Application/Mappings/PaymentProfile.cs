@@ -52,8 +52,7 @@ public class PaymentProfile : Profile
                         WriteIndented = false,
                         NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals 
                     })
-                ))
-                .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(_ => DateTime.UtcNow));
+                ));
 
     }
 }
