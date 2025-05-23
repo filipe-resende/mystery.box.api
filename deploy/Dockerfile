@@ -34,6 +34,7 @@ COPY --from=build /app/out .
 
 # Expor a porta padrão
 EXPOSE 80
+EXPOSE 443
 
 # Comando para iniciar a aplicação
 ENTRYPOINT ["dotnet", "Api.dll"]
