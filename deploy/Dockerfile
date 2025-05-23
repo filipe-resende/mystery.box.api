@@ -2,18 +2,23 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
-# Copia arquivos de projeto primeiro para aproveitar cache do Docker
+# Copia arquivos de projeto para o cache
 COPY src/Api/Api.csproj src/Api/
 COPY src/Domain/Domain.csproj src/Domain/
 COPY src/Infrastructure/Infrastructure.csproj src/Infrastructure/
 COPY src/Application/Application.csproj src/Application/
+# Não copie os projetos de teste!
 
 # Restaura dependências
 WORKDIR /app/src/Api
 RUN dotnet restore
 
-# Copia o restante do código
-COPY src/ ./src/
+# Copia apenas o código dos projetos necessários
+COPY src/Api/ src/Api/
+COPY src/Domain/ src/Domain/
+COPY src/Infrastructure/ src/Infrastructure/
+COPY src/Application/ src/Application/
+# Não copie os diretórios dos testes
 
 # Publica a aplicação
 RUN dotnet publish -c Release -o /app/out
