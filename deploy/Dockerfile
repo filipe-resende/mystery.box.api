@@ -3,11 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
 # Copia arquivos de projeto e restaura dependências
-COPY *.csproj ./
+COPY src/Api/Api.csproj ./
 RUN dotnet restore
 
 # Copia o restante do código e compila
-COPY . ./
+COPY src/Api/ ./
 RUN dotnet publish -c Release -o out
 
 # Etapa 2: Runtime
