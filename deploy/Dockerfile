@@ -1,36 +1,24 @@
 # Etapa 1: Build
-FROM node:20 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
-# Copia package.json e package-lock.json
-COPY package*.json ./
+# Copia arquivos de projeto e restaura dependências
+COPY *.csproj ./
+RUN dotnet restore
 
-# Instala dependências
-RUN npm install
-
-# Copia o restante do código
+# Copia o restante do código e compila
 COPY . ./
+RUN dotnet publish -c Release -o out
 
-# Compila o projeto
-RUN npm run build
+# Etapa 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+WORKDIR /app
 
-# Etapa 2: Deploy com NGINX
-FROM nginx:alpine
-WORKDIR /usr/share/nginx/html
+# Copia o build da etapa anterior
+COPY --from=build /app/out ./
 
-# Remove arquivos padrão do NGINX
-RUN rm -rf ./*
-
-# Copia os arquivos compilados para o NGINX
-# ⚠️ Ajuste conforme o builder:
-# Vite → dist
-# CRA → build
-COPY --from=build /app/dist . 
-
-# Expor a porta padrão do NGINX
+# Expor a porta padrão
 EXPOSE 80
 
-
-
-# Comando padrão do NGINX
-CMD ["nginx", "-g", "daemon off;"]
+# Comando para iniciar a aplicação
+ENTRYPOINT ["dotnet", "Api.dll"]
