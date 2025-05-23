@@ -1,4 +1,4 @@
-﻿namespace Infraestructure.Data.DBContext;
+﻿namespace Infrastructure.Data.DBContext;
 
 public class Context(DbContextOptions<Context> options) : DbContext(options)
 {
@@ -40,7 +40,7 @@ public class Context(DbContextOptions<Context> options) : DbContext(options)
 
         modelBuilder.Entity<User>().OwnsOne(u => u.Identification).HasData(new
         {
-            UserId = userId, 
+            UserId = userId,
             Type = "CPF",
             Number = "12345678900"
         });
@@ -101,7 +101,7 @@ public class Context(DbContextOptions<Context> options) : DbContext(options)
             Id = purchaseHistoryId,
             UserId = userId,
             PaymentId = paymentId,
-            SteamCardCategoryId = categoryId, 
+            SteamCardCategoryId = categoryId,
             Quantity = 1,
             UnitPrice = 19,
             Status = SteamCardStatus.Pending
@@ -128,7 +128,7 @@ public class Context(DbContextOptions<Context> options) : DbContext(options)
             PayerEmail = "cliente@teste.com",
             PayerDocumentType = "CPF",
             PayerDocumentNumber = "12345678900",
-            FullResponseJson = "{}", 
+            FullResponseJson = "{}",
             CreatedOn = createdAt,
             UserId = userId
         });

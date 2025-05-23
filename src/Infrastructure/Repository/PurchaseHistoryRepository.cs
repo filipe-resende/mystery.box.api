@@ -1,4 +1,6 @@
-﻿namespace Infraestructure.Repository;
+﻿using Infrastructure.Data.DBContext;
+
+namespace Infrastructure.Repository;
 
 public class PurchaseHistoryRepository(Context dbContext) : Repository<PurchaseHistory>(dbContext), IPurchaseHistoryRepository
 {

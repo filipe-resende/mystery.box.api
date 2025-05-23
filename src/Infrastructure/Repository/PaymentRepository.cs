@@ -1,4 +1,6 @@
-﻿namespace Infraestructure.Repository;
+﻿using Infrastructure.Data.DBContext;
+
+namespace Infrastructure.Repository;
 
 public class PaymentRepository(Context dbContext) : Repository<Payment>(dbContext), IPaymentRepository
 {

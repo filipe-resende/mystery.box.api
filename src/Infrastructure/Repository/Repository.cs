@@ -1,4 +1,6 @@
-﻿namespace Infraestructure.Repository;
+﻿using Infrastructure.Data.DBContext;
+
+namespace Infrastructure.Repository;
 
 public abstract class Repository<TEntity>(Context dbContext) : IDisposable, IRepository<TEntity>
    where TEntity : class
@@ -25,7 +27,7 @@ public abstract class Repository<TEntity>(Context dbContext) : IDisposable, IRep
 
     public async Task<IEnumerable<TEntity>> GetAll()
     {
-       return await dbContext.Set<TEntity>().ToListAsync();
+        return await dbContext.Set<TEntity>().ToListAsync();
     }
 
     public async Task Update(TEntity entity)
@@ -40,7 +42,7 @@ public abstract class Repository<TEntity>(Context dbContext) : IDisposable, IRep
 
             throw ex;
         }
-       
+
     }
     public void Remove(int id)
     {
