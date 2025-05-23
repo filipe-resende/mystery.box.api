@@ -7,8 +7,6 @@ COPY src/Api/Api.csproj src/Api/
 COPY src/Domain/Domain.csproj src/Domain/
 COPY src/Infrastructure/Infrastructure.csproj src/Infrastructure/
 COPY src/Application/Application.csproj src/Application/
-COPY src/UnitTests/UnitTests.csproj src/UnitTests/
-COPY src/IntegrationTests/IntegrationTests.csproj src/IntegrationTests/
 
 # Restaura dependências
 WORKDIR /app/src/Api
