@@ -9,14 +9,12 @@ public class Startup(IConfigurationRoot configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         var allowedOrigins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
-
-        var corsPolicyName = "AllowConfiguredOrigins";
-         
+        
         services.AddCors(options =>
         {
             options.AddPolicy("AllowFrontend", policy =>
             {
-                policy.WithOrigins(corsPolicyName)
+                policy.WithOrigins(allowedOrigins)
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials();
