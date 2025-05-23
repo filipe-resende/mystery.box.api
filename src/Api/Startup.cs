@@ -146,5 +146,11 @@ public class Startup(IConfigurationRoot configuration)
             endpoints.MapControllers();
             endpoints.MapHub<NotificationHub>("/hub/notificacoes");
         });
+
+        using (var scope = app.ApplicationServices.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<Context>();
+            db.Database.Migrate();
+        }
     }
 }
