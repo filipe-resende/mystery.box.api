@@ -2,16 +2,21 @@
 
 public class MercadoPagoPaymentGatewayService : IPaymentGatewayService
 {
-    private readonly PaymentClient client = new();
+    private readonly PaymentClient _client;
     private readonly HttpClient _httpClient;
 
-    public MercadoPagoPaymentGatewayService()
+    public MercadoPagoPaymentGatewayService(
+        PaymentClient client,
+        HttpClient httpClient,
+        IOptions<MercadoPagoSettings> settings)
     {
-        MercadoPagoConfig.AccessToken = "TEST-7448109333317481-100923-68f94c20d7c20e0294474ae8371c7f1b-127600031";
+        _client = client;
+        _httpClient = httpClient;
 
-        _httpClient = new HttpClient();
+        MercadoPagoConfig.AccessToken = settings.Value.AccessToken;
+
         _httpClient.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", MercadoPagoConfig.AccessToken);
+            new AuthenticationHeaderValue("Bearer", settings.Value.AccessToken);
     }
 
     public async Task<MercadoPago.Resource.Payment.Payment> PostCreditCardAsync(PostCreditCardPaymentCommand request)
@@ -37,7 +42,7 @@ public class MercadoPagoPaymentGatewayService : IPaymentGatewayService
             AdditionalInfo = new PaymentAdditionalInfoRequest { Items = request.Itens }
         };
 
-        return await client.CreateAsync(paymentRequest, requestOptions);
+        return await _client.CreateAsync(paymentRequest, requestOptions);
     }
 
     public async Task<PaymentsMethodsDTO> GetPaymentMethodsByBinAsync(string bin)
@@ -80,9 +85,8 @@ public class MercadoPagoPaymentGatewayService : IPaymentGatewayService
             },
         };
 
-        return await client.CreateAsync(request, requestOptions);
+        return await _client.CreateAsync(request, requestOptions);
     }
 
-    public async Task<MercadoPago.Resource.Payment.Payment> GetPaymentAsync(long paymentId) =>
-        await client.GetAsync(paymentId);
+    public async Task<MercadoPago.Resource.Payment.Payment> GetPaymentAsync(long paymentId) => await _client.GetAsync(paymentId);
 }

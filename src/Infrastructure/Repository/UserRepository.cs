@@ -1,4 +1,6 @@
-﻿namespace Infraestructure.Repository;
+﻿using Infrastructure.Data.DBContext;
+
+namespace Infrastructure.Repository;
 
 public class UserRepository(Context dbContext) : Repository<User>(dbContext), IUserRepository
 {

@@ -1,16 +1,22 @@
-﻿namespace Api;
+﻿using Api.Injections;
+
+namespace Api;
 
 public class Startup(IConfigurationRoot configuration)
 {
     public IConfigurationRoot Configuration { get; } = configuration;
-
+  
     public void ConfigureServices(IServiceCollection services)
     {
+        var allowedOrigins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+
+        var corsPolicyName = "AllowConfiguredOrigins";
+         
         services.AddCors(options =>
         {
             options.AddPolicy("AllowFrontend", policy =>
             {
-                policy.WithOrigins("https://localhost:3000")
+                policy.WithOrigins(corsPolicyName)
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials();
@@ -35,6 +41,7 @@ public class Startup(IConfigurationRoot configuration)
         services.AddLogging();
 
         services.AddRepository();
+        services.AddApplicationServices(configuration);
 
         services.AddMediatR(cfg =>
         {

@@ -1,4 +1,6 @@
-﻿namespace Infraestructure.Repository;
+﻿using Infrastructure.Data.DBContext;
+
+namespace Infrastructure.Repository;
 
 public class SteamCardRepository(Context dbContext) : Repository<SteamCard>(dbContext), ISteamCardRepository
 {
@@ -11,7 +13,7 @@ public class SteamCardRepository(Context dbContext) : Repository<SteamCard>(dbCo
             var cards = await dbContext.SteamCards
                 .Where(card =>
                     card.SteamCardCategoryId == item.Id &&
-                    (card.Status == SteamCardStatus.Available || 
+                    (card.Status == SteamCardStatus.Available ||
                      card.Status == SteamCardStatus.Reserved) &&
                      card.Active)
                 .OrderBy(card => card.CreatedAt)

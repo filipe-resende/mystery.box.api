@@ -1,4 +1,4 @@
-﻿namespace Infraestructure.Data.Mapping;
+﻿namespace Infrastructure.Data.Mapping;
 public class PaymentsMap : IEntityTypeConfiguration<Payment>
 {
     public void Configure(EntityTypeBuilder<Payment> builder)

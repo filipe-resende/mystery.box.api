@@ -27,3 +27,5 @@ global using System.Text.Json.Serialization;
 global using System.Text.Json;
 global using Application.DTO;
 global using MercadoPago.Resource.Payment;
+global using Microsoft.Extensions.Options;
+global using System.Net.Http.Headers;
