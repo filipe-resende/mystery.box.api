@@ -14,13 +14,15 @@ WORKDIR /app/src/Api
 RUN dotnet restore
 
 # Copia apenas o código dos projetos necessários
-COPY src/Api/ src/Api/
-COPY src/Domain/ src/Domain/
-COPY src/Infrastructure/ src/Infrastructure/
-COPY src/Application/ src/Application/
+WORKDIR /app
+COPY src/Api/ ./src/Api/
+COPY src/Domain/ ./src/Domain/
+COPY src/Infrastructure/ ./src/Infrastructure/
+COPY src/Application/ ./src/Application/
 # Não copie os diretórios dos testes
 
 # Publica a aplicação
+WORKDIR /app/src/Api
 RUN dotnet publish -c Release -o /app/out
 
 # Etapa 2: Runtime
